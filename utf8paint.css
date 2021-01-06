@@ -1,0 +1,32 @@
+body {
+	background-color: #333;
+	color: #ccc;
+	font-family: "Go Mono", monospace;
+	font-size: 12pt;
+}
+h1 {
+	margin: 1em 1em 1em 0.5em;
+}
+.codepoint {
+	font-size: 2em;
+	margin-right: 0.25em;
+}
+.tile {
+	border: 0;
+	line-height: 1;
+	margin: 0;
+	padding: 0;
+	white-space: pre;
+}
+#canvas {
+	border: 1px solid #555;
+	margin: 1em;
+	width: min-content;
+}
+#footer {
+	margin: 4em 1em 1em 1em;
+}
+#palette {
+	margin: 1em 1em 2em 1em;
+	white-space: pre;
+}
