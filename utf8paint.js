@@ -41,21 +41,16 @@ function restore() {
 
 	for (var i = 0, n = 0; i < input.length; i++) {
 		let c = input.charAt(i);
-
-		let s = document.createElement('span');
-		s.id = spanCount
-		s.className = 'tile';
-
 		n++;
 		if (c === '\n' || i === input.length - 1) {
 			if (n > columns) {
 				columns = n;
 			} else {
-				while (n < columns) {
-					spanCount++;
+				while (n <= columns) {
 					let s = document.createElement('span');
-					s.id = spanCount
 					s.className = 'tile';
+					s.id = spanCount
+					spanCount++
 					s.innerHTML = ' ';
 					s.addEventListener('mousedown', () => {
 						painting = true;
@@ -73,14 +68,18 @@ function restore() {
 			}
 			inputRows++;
 		} else {
+			let s = document.createElement('span');
+			s.className = 'tile';
+			s.id = spanCount
+			spanCount++
 			s.innerHTML = c;
+			s.addEventListener('mousedown', () => {
+				painting = true;
+				paint(s);
+			}, false);
+			s.addEventListener('mouseenter', () => { paint(s); }, false);
+			canvas.appendChild(s);
 		}
-		s.addEventListener('mousedown', () => {
-			painting = true;
-			paint(s);
-		}, false);
-		s.addEventListener('mouseenter', () => { paint(s); }, false);
-		canvas.appendChild(s);
 	}
 
 	for (; inputRows < rows; inputRows++) {
@@ -89,8 +88,9 @@ function restore() {
 		for (i = 0; i < columns; i++) {
 			spanCount++;
 			let s = document.createElement('span');
-			s.id = spanCount
 			s.className = 'tile';
+			s.id = spanCount
+			spanCount++
 			s.innerHTML = ' ';
 			s.addEventListener('mousedown', () => {
 				painting = true;
