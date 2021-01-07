@@ -13,6 +13,7 @@
 <h1>utf8paint</h1>
 
 <div id="palette">
+<input id="char" type="text" size="1" maxlength="1"><button onclick="setchar();">Set</button>
 </div>
 
 <div id="canvas"></div>
@@ -22,6 +23,11 @@
 <p>Select all (Ctrl-a). Copy (Ctrl-c). Paste (Ctrl-v) into your text editor.</p>
 <h3>How do I customize the palette of characters or the width and height?</h3>
 <p>Edit the first few lines of <code>utf8paint.js</code>.</p>
+<h3>Source code? Latest version?</h3>
+<p><a href="">https://github.com/pgorman/utf8paint</a></p>
+<h3>How do I restore?</h3>
+<textarea id="restore" cols="80" rows="3">Paste here, then click the Restore button.</textarea>
+<button onclick="restore();">Restore</button>
 <hr>
 <p>utf8paint copyright 2021 Paul Gorman, and licensed under the GPLv3.</p>
 </div>

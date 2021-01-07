@@ -1,7 +1,8 @@
 // You might want to customize these:
-var columns = 80;
+var columns = 78;
 var rows = 40;
-var palette = '█▓▒░ ▚.•°▞|-_+=≈≠*#×/\\^v~`{}[]☠ꙮ⛰⛩⛫⚠★▶…'
+// https://en.wikipedia.org/wiki/List_of_Unicode_characters
+var palette = '█▓▒░ .•°|╎╏┆┇-╌╍┄┅_+│─┼┌┘└┐┬├┤┴┃━╋┏┛┗┓┳┣┫┻║═╬╔╝╚╗╦╠╣╩*✳✺=≈≠#×╱╲╳^v⌃⌄~`{}[]⏴⏵⏶⏷☠☢☣ꙮ⚛⚠☆★…☐☒♔♕♖♗♘♙♚♛♜♝♞♟♠♡♢♣♤♥♦♧♨⚀⚁⚂⚃⚄⚅⌁⌂⎺⎻⎼⎽▀▁▂▃▄▅▆▇██▉▊▋▌▍▎▏▐▝▗▘▖▞▙▚▟■□▪▫▤▥▦▧▨▩▲△▶▷▴▵▸▹▼▽▾▿◀◁◂◃◆◇○◍◎●◐◑◒◓◔◕◖◗◘◙◚◛◜◝◞◟◠◡◢◿◣◺◤◸◥◹◦◧◨◩◪◫'
 
 
 var codepoint = '█';
@@ -9,10 +10,101 @@ var painting = false;
 var totalTiles = columns * rows;
 
 // paint changes the contents of the tile/pixel/character.
-function paint(t) {
+function paint(s) {
 	if (painting) {
-		t.innerHTML = codepoint;
+		s.innerHTML = codepoint;
 	}
+}
+
+// restore takes user input and draws a new canvas based on that input.
+function restore() {
+	var input = document.getElementById('restore').value
+	var canvas = document.getElementById('canvas');
+	var inputRows = 0;
+	var spanCount = 0;
+
+	while (canvas.lastChild) {
+		canvas.removeChild(canvas.lastChild);
+	}
+
+	// Set columns based on longest line, if greater than global columns.
+	for (var i = 0, n = 0; i < input.length; i++) {
+		let c = input.charAt(i);
+		n++;
+		if (c === '\n') {
+			if (n > columns) {
+				columns = n;
+			}
+			n = 0;
+		}
+	}
+
+	for (var i = 0, n = 0; i < input.length; i++) {
+		let c = input.charAt(i);
+
+		let s = document.createElement('span');
+		s.id = spanCount
+		s.className = 'tile';
+
+		n++;
+		if (c === '\n' || i === input.length - 1) {
+			if (n > columns) {
+				columns = n;
+			} else {
+				while (n < columns) {
+					spanCount++;
+					let s = document.createElement('span');
+					s.id = spanCount
+					s.className = 'tile';
+					s.innerHTML = ' ';
+					s.addEventListener('mousedown', () => {
+						painting = true;
+						paint(s);
+					}, false);
+					s.addEventListener('mouseenter', () => { paint(s); }, false);
+					canvas.appendChild(s);
+					n++
+				}
+				n = 0;
+			}
+			if (i !== input.length - 1) {
+				let br = document.createElement('br');
+				canvas.appendChild(br);
+			}
+			inputRows++;
+		} else {
+			s.innerHTML = c;
+		}
+		s.addEventListener('mousedown', () => {
+			painting = true;
+			paint(s);
+		}, false);
+		s.addEventListener('mouseenter', () => { paint(s); }, false);
+		canvas.appendChild(s);
+	}
+
+	for (; inputRows < rows; inputRows++) {
+		let br = document.createElement('br');
+		canvas.appendChild(br);
+		for (i = 0; i < columns; i++) {
+			spanCount++;
+			let s = document.createElement('span');
+			s.id = spanCount
+			s.className = 'tile';
+			s.innerHTML = ' ';
+			s.addEventListener('mousedown', () => {
+				painting = true;
+				paint(s);
+			}, false);
+			s.addEventListener('mouseenter', () => { paint(s); }, false);
+			canvas.appendChild(s);
+		}
+	}
+}
+
+// setchar sets a codepoint with which to paint from user input.
+function setchar() {
+	codepoint = document.getElementById('char').value
 }
 
 // setup creates the initial state.
@@ -60,22 +152,22 @@ function setup() {
 				let br = document.createElement('br');
 				canvas.appendChild(br);
 			}
-			let t = document.createElement('span');
-			t.id = i;
-			t.className = 'tile';
-			canvas.appendChild(t);
+			let s = document.createElement('span');
+			s.id = i;
+			s.className = 'tile';
+			canvas.appendChild(s);
 			i++;
 		}
 	}
 	var tiles = document.querySelectorAll('.tile');
 	tiles.forEach(
-		function(t) {
-			t.innerHTML = ' ';
-			t.addEventListener('mousedown', () => {
+		function(s) {
+			s.innerHTML = ' ';
+			s.addEventListener('mousedown', () => {
 				painting = true;
-				paint(t);
+				paint(s);
 			}, false);
-			t.addEventListener('mouseenter', () => { paint(t); }, false);
+			s.addEventListener('mouseenter', () => { paint(s); }, false);
 		}
 	)
 
